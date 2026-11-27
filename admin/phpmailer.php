@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="icon" href="img/joblyfetitle.png">
+  <title>JobLyfe: Where Talent Meets Opportunity</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <style type="text/css">
+    /*
+ * Globals
+ */
+
+    /* Links */
+    a,
+    a:focus,
+    a:hover {
+      color: #fff;
+    }
+
+    /* Custom default button */
+    .btn-secondary,
+    .btn-secondary:hover,
+    .btn-secondary:focus {
+      color: #333;
+      text-shadow: none;
+      /* Prevent inheritance from `body` */
+      background-color: #fff;
+      border: .05rem solid #fff;
+    }
+
+
+    /*
+ * Base structure
+ */
+
+    html,
+    body {
+      height: 100%;
+      background-color: #333;
+    }
+
+    body {
+      display: -ms-flexbox;
+      display: -webkit-box;
+      display: flex;
+      -ms-flex-pack: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      color: #fff;
+      text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+      box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+    }
+
+    .cover-container {
+      max-width: 42em;
+    }
+
+
+    /*
+ * Header
+ */
+    .masthead {
+      margin-bottom: 2rem;
+    }
+
+    .masthead-brand {
+      margin-bottom: 0;
+    }
+
+    .nav-masthead .nav-link {
+      padding: .25rem 0;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .5);
+      background-color: transparent;
+      border-bottom: .25rem solid transparent;
+    }
+
+    .nav-masthead .nav-link:hover,
+    .nav-masthead .nav-link:focus {
+      border-bottom-color: rgba(255, 255, 255, .25);
+    }
+
+    .nav-masthead .nav-link+.nav-link {
+      margin-left: 1rem;
+    }
+
+    .nav-masthead .active {
+      color: #fff;
+      border-bottom-color: #fff;
+    }
+
+    @media (min-width: 48em) {
+      .masthead-brand {
+        float: left;
+      }
+
+      .nav-masthead {
+        float: right;
+      }
+    }
+
+
+    /*
+ * Cover
+ */
+    .cover {
+      padding: 0 1.5rem;
+    }
+
+    .cover .btn-lg {
+      padding: .75rem 1.25rem;
+      font-weight: 700;
+    }
+
+
+    /*
+ * Footer
+ */
+    .mastfoot {
+      color: rgba(255, 255, 255, .5);
+    }
+  </style>
+
+</head>
+
+<body class="text-center">
+
+  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+
+    <main role="main" class="inner cover">
+      <h1 class="cover-heading">Thank You For Visiting Us!</h1>
+
+      <?php
+
+      //Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
+      use PHPMailer\PHPMailer\PHPMailer;
+      use PHPMailer\PHPMailer\SMTP;
+      use PHPMailer\PHPMailer\Exception;
+
+      include(__DIR__ . '/connection/db.php');
+
+      if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+
+        //Load Composer's autoloader
+        require __DIR__ . '/email/vendor/autoload.php';
+
+        $first_name = $_POST['first_name'];
+        $to = $_POST['to'];
+        $from = $_POST['from'];
+        $subject = $_POST['subject'];
+        $body = $_POST['body'];
+        $id = $_POST['id'];
+
+        //Create an instance; passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
+        try {
+          //Server settings
+      
+          // In the video -
+          // $mail->SMTPDebug = 1;
+      
+          // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+          $mail->isSMTP();                                            //Send using SMTP
+          $mail->Host = 'smtp.gmail.com';                     //Set the SMTP server to send through
+          $mail->SMTPAuth = true;                                   //Enable SMTP authentication
+          $mail->Username = $from;                     //SMTP username
+      
+          // replaced secret with the app password of $from email
+          $mail->Password = 'znzo dwuv pkqj ltpb';                               //SMTP password
+          $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+          $mail->Port = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+      
+          //Recipients
+          $mail->setFrom($from, 'JobLyfe');
+
+          // Optional to change address below
+          $mail->addAddress($to, $first_name);     //Add a recipient
+      
+          // ...Commented out in video (not in the original code) from here...
+      
+          // $mail->addAddress('ellen@example.com');               //Name is optional
+          // $mail->addReplyTo('info@example.com', 'Information');
+          // $mail->addCC('cc@example.com');
+          // $mail->addBCC('bcc@example.com');
+      
+          //Attachments
+          // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+          // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+      
+          // ...to here...
+      
+          //Content
+          $mail->isHTML(true);                                  //Set email format to HTML
+          $mail->Subject = $subject;
+          $mail->Body = $body;
+          $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+          $mail->send();
+          echo "<p class='lead'>Message has been sent successfully!!!</p>";
+
+          //     include('connection/db.php');
+//     $query=mysqli_query($conn, "DELETE FROM `job_apply` WHERE `job_apply`.`id` = '$id'");
+      
+          //     echo "<script>
+//     window.setTimeout(function(){
+      
+          //     window.location.href = 'http://localhost/job_portal/admin/apply_jobs.php';
+      
+          // }, 5000);
+      
+          // </script>";
+      
+        } catch (Exception $e) {
+          echo "<p class='lead'>Message could not be sent. Mailer Error: {$mail->ErrorInfo}</p>";
+        }
+        ?>
+
+        <p class="lead">
+          <a href="apply_jobs.php" class="btn btn-lg btn-secondary">Back</a>
+        </p>
+
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>Copyright &copy;
+            <script>document.write(new Date().getFullYear());</script> | All Rights Reserved | Designed and Developed by
+            <a href="https://idlehax.com" target="_blank">Idlehax Technologies</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+
+    <!-- <script type="text/javascript">
+      function Redirect(){
+        window.location.href = ("http://localhost/job_portal");
+      }
+      document.write("Please wait you will be redirected in 10 sec");
+      // inverted comma not completed
+      secTimeout('Redirect(), 10000);
+    </script> -->
+  </body>
+
+  </html>
+
+  <?php
+      } else {
+        header('location:../job-post.php');
+        exit();
+      }
+      ?>
